@@ -45,19 +45,19 @@ function ShopPage() {
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <TicketIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Game Ticket: {user.user.user_metadata.health}
+      Game Ticket: {user?.user.user_metadata.health}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <AccessTimeIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Time Joker: {user.user.user_metadata.timingJoker}
+      Time Joker: {user?.user.user_metadata.timingJoker}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <PercentIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Fifty Lucky: {user.user.user_metadata.fiftyPercentJoker}
+      Fifty Lucky: {user?.user.user_metadata.fiftyPercentJoker}
     </Typography>
   </Box>
 </Box>

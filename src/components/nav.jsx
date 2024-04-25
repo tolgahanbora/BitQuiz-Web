@@ -42,7 +42,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ width: '100%', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#361E70"  }}>
+<AppBar position="fixed" sx={{ width: '100%', zIndex: 9, backgroundColor: "#361E70" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Stack sx={{ display: {xs: "none", md: "flex"}}}>
