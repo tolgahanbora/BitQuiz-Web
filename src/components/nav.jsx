@@ -12,6 +12,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from 'react-router-dom';
+import supabase from "../utils/supabase"
 
 import bitquizLogo from "../assets/logos.png"
 import avatar from "../assets/avatar.png"
@@ -20,11 +22,12 @@ import { Link } from 'react-router-dom';
 
 
 const pages = ['Shop', 'Play'];
-const settings = ['Profile','Logout'];
+
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,6 +44,27 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const goProfile = () => {
+    navigate("/profile")
+  }
+
+  const handleSignOut = async () =>{
+    try {
+      const { error } = await supabase.auth.signOut()
+    
+      if(!error) {
+        sessionStorage.removeItem('access_token');
+         navigate("/auth")
+      }
+      else {
+        console.log("error message:", error)
+      }
+    } catch (e) {
+      console.log("something went wrong", e)
+    }
+
+  }
+
   return (
 <AppBar position="fixed" sx={{ width: '100%', zIndex: 9, backgroundColor: "#361E70" }}>
       <Container maxWidth="xl">
@@ -48,7 +72,7 @@ function Navbar() {
           <Stack sx={{ display: {xs: "none", md: "flex"}}}>
           <img
          src={bitquizLogo}
-         style={{height: "140px"}}
+         style={{height: "140px", marginRight: "50px"}}
          />
           </Stack>
       
@@ -120,7 +144,7 @@ function Navbar() {
 
 <Box sx={{ flexGrow: 0 }}>
   <Tooltip title="Open settings">
-    <IconButton component={Link} onClick={handleOpenUserMenu} to="/profile" sx={{ p: 0 }}>
+    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
       <Avatar sizes='40px' alt="Remy Sharp" src={avatar} />
     </IconButton>
   </Tooltip>
@@ -140,13 +164,17 @@ function Navbar() {
     open={Boolean(anchorElUser)}
     onClose={handleCloseUserMenu}
   >
-    {settings.map((setting) => (
-      <MenuItem key={setting} onClick={handleCloseUserMenu}>
-        <Typography textAlign="center">{setting}</Typography>
+  
+      <MenuItem   onClick={handleCloseUserMenu}>
+        <Typography onClick={goProfile} textAlign="center">Profile</Typography>
       </MenuItem>
-    ))}
+      <MenuItem   onClick={handleCloseUserMenu}>
+        <Typography onClick={handleSignOut} textAlign="center">Logout</Typography>
+      </MenuItem>
+   
   </Menu>
 </Box>
+
 
         </Toolbar>
       </Container>

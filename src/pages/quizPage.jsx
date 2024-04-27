@@ -275,7 +275,7 @@ const handleNextQuestion = () => {
       {showScore ? (
         <Paper elevation={3} style={{ padding: 20, textAlign: 'center', width: "150%", height: "170%", backgroundColor: "#1F1147" }}>
      
-         <Score token={totalEarnedBTC} trueAnswers={trueAnswer} />
+         <Score token={totalEarnedBTC} trueAnswers={trueAnswer} totalToken={user?.user?.user_metadata.token}/>
         </Paper>
       ) : (
         <Paper elevation={3} style={{ padding: 20, backgroundColor: "transparent" }}>

@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -12,7 +10,11 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 
 import { usePicket } from "@picketapi/picket-react";
-import { Wallet, Transaction, SystemProgram,PublicKey } from '@solana/web3.js';
+import { Transaction, SystemProgram, PublicKey } from '@solana/web3.js';
+
+// @solana/wallet-adapter-react ekleyin
+import { useWallet } from '@solana/wallet-adapter-react';
+
 
 function ShopCard({ product }) {
     const { name, price, quantity, image } = product;
@@ -26,51 +28,46 @@ function ShopCard({ product }) {
         login
     } = usePicket();
 
-   
-// user is logging in
-if (isAuthenticating) return "Loading";
+    const { wallet } = useWallet();
 
-  
-const handleLogin = useCallback(async () => {
-  let auth = authState;
-  if (!auth) {
-      auth = await login({ chain: "solana" });
-  }
+    // useCallback'ler bileşenin dışına alındı
+    const handleLogin = useCallback(async () => {
+        let auth = authState;
+        if (!auth) {
+            auth = await login({ chain: "solana" });
+        }
 
-  // login failed
-  if (!auth) return;
+        if (!auth) return;
 
-  // Store accessToken and walletAddress in localStorage
-  localStorage.setItem('accessToken', auth.accessToken);
-  localStorage.setItem('walletAddress', auth.user.walletAddress);
+        localStorage.setItem('accessToken', auth.accessToken);
+        localStorage.setItem('walletAddress', auth.user.walletAddress);
 
-  authState.user.wallet = auth.wallet;
+        authState.user.wallet = auth.wallet;
+    }, [authState, login]);
 
-}, [authState, login]);
+    const handleBuy = useCallback(async () => {
+        try {
+            if (!wallet?.publicKey) {
+                console.error('Cüzdan bağlı değil');
+                return;
+            }
 
+            const transaction = new Transaction().add(
+                SystemProgram.transfer({
+                    fromPubkey: wallet.publicKey,
+                    toPubkey: new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik'),
+                    lamports: price * 1000000000,
+                })
+            );
+            const signature = await wallet.signTransaction(transaction);
+            const result = await window.solana.sendTransaction(transaction, [signature]);
+            console.log('Transaction successful:', result);
+        } catch (error) {
+            console.error("Hata: ", error);
+        }
+    }, [wallet, price]);
 
-const handleBuy = useCallback(async () => {
-  try {
-    
-    const walletAddress = localStorage.getItem('walletAddress');
-                const wallet = new Wallet(walletAddress, window.solana);
-                const transaction = new Transaction().add(
-                    SystemProgram.transfer({
-                        fromPubkey: wallet.publicKey,
-                        toPubkey: new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik'),
-                        lamports: price * 1000000000, // SOL to lamports conversion
-                    })
-                );
-                const signature = await wallet.signTransaction(transaction);
-                const result = await window.solana.sendTransaction(transaction, [signature]);
-                console.log('Transaction successful:', result);
-  } catch (error) {
-      console.error("Hata: ", error);
-  }
-}, [ price]);
-
-
-
+    if (isAuthenticating) return "Loading";
 
     return (
         <Card sx={{ maxWidth: 345, backgroundColor: "#311C7F", borderRadius: 5 }}>
@@ -91,8 +88,6 @@ const handleBuy = useCallback(async () => {
                     Price: $SOL {price}
                 </Typography>
 
-               
-         
                 {!authState && (
                     <Button
                         size="large"
@@ -114,7 +109,7 @@ const handleBuy = useCallback(async () => {
 
                 {authState && (
                     <Button
-                    onClick={handleBuy}
+                        onClick={handleBuy}
                         size="large"
                         sx={{
                             marginLeft: 'auto',
@@ -130,19 +125,19 @@ const handleBuy = useCallback(async () => {
                         Buy
                     </Button>
                 )}
-               
             </CardActions>
         </Card>
     );
 }
 
+
 ShopCard.propTypes = {
-  product: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      quantity: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired
-  }).isRequired
+    product: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        quantity: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired
+    }).isRequired
 };
 
 export default ShopCard;

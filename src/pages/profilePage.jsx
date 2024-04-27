@@ -46,6 +46,7 @@ const ProfilePage = () => {
   const sendSolanaTokens = () =>{
     console.log("asds")
     console.log(user)
+    console.log(user?.user?.user_metadata.token)
   }
 
   const openPhantomHelp = () => {
@@ -65,7 +66,6 @@ const ProfilePage = () => {
     width: '100%', // Set width to 100%
     backgroundColor: '#1F1147',
   
-    padding: 2,
   }}
 >
       <Typography variant="h3" color="white" gutterBottom>
@@ -74,8 +74,9 @@ const ProfilePage = () => {
       <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
         <img src={avatar} alt="Avatar" style={{ width: 100, height: 100, borderRadius: '50%' }} />
         <Typography variant="h5" color="white" gutterBottom>
-          {user.user.user_metadata.username}
-        </Typography>
+  {user && user.user.user_metadata.username}
+</Typography>
+
         <Paper
   elevation={3}
   sx={{
@@ -95,17 +96,17 @@ const ProfilePage = () => {
 >
   <img src={solana} alt="Solana" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
   <Typography variant="h5" gutterBottom>
-    Solana: {user.user.user_metadata.token}
+    Solana: {user  && user?.user?.user_metadata.token}
   </Typography>
   <Box display="flex" justifyContent="space-around" width="100%" mt={2}>
     <Typography variant="body1">
-      Game Ticket: {user.user.user_metadata.health}
+      Game Ticket: {user  &&  user.user.user_metadata.health}
     </Typography>
     <Typography variant="body1">
-      Time Joker: {user.user.user_metadata.timingJoker}
+      Time Joker: {user  &&  user.user.user_metadata.timingJoker}
     </Typography>
     <Typography variant="body1">
-      Fifty Lucky: {user.user.user_metadata.fiftyPercentJoker}
+      Fifty Lucky: {user  &&  user.user.user_metadata.fiftyPercentJoker}
     </Typography>
   </Box>
 </Paper>

@@ -7,20 +7,23 @@ import supabase from '../utils/supabase';
 import { useUserContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
 
-const Score = ({token, trueAnswers}) => {
+const Score = ({token, trueAnswers,totalToken}) => {
     const trueAnswer = trueAnswers || 0
     const totalEarnedBTC = token || 0;
     const navigate = useNavigate()
 
     const { user } = useUserContext();
 
-    useEffect(() => {
-        updateToken();
-    }, []);
+ 
+
+  
 
     const updateToken = async () => {
         try {
-            const newToken = user.user.user_metadata.token + totalEarnedBTC;
+            const newToken = await totalToken + totalEarnedBTC;
+            console.log(newToken)
+            console.log(totalToken)
+            console.log(totalEarnedBTC)
             await supabase.auth.updateUser({
                 data: { token: newToken },
             });
@@ -28,6 +31,13 @@ const Score = ({token, trueAnswers}) => {
             console.error('Error updating ticket:', error);
         }
     };
+
+    useEffect(() => {
+        if(user) {
+            updateToken();
+        }
+       
+    }, []);
 
     const config = {
         angle: 90,
