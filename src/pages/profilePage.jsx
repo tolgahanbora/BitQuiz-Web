@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import  { useState } from 'react';
+import  { useState, useCallback } from 'react';
 import { Box, Typography, Modal, TextField, Button, Link, Paper, Container } from '@mui/material';
 import Navbar from "../components/nav"
 
@@ -12,6 +13,19 @@ import avatar from "../assets/avatar.png";
 import solana from "../assets/solanaLogoMark.png";
 import bitquizBackground from "../assets/Bıtquız_background.png";
 
+import {
+  WalletModalProvider,
+  WalletDisconnectButton,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
+
+import supabase from '../utils/supabase';
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+import { Transaction, SystemProgram, PublicKey,LAMPORTS_PER_SOL, Keypair, Connection  } from '@solana/web3.js';
+
+
 
 const ProfilePage = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,35 +33,73 @@ const ProfilePage = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const user = useUserContext();
 
-  /* const sendSolanaTokens = async (toAddress) => {
-    if (!isButtonDisabled && user?.token >= 1) {
-      setIsButtonDisabled(true);
+  const [isConnected, setIsConnected] = useState(false);
 
-      try {
-        const response = await axios.post('https://google.com', {
-          toWallet: toAddress,
-          amountInLamports: user?.token
-        });
+  const wallet = localStorage.getItem('walletAddress');
 
-        if (response.data) {
-          // Update user token
-        }
-      } catch (error) {
-        console.error('Transfer Error:', error);
-        alert('An error occurred during the transfer process.');
-      } finally {
-        setIsButtonDisabled(false);
-      }
-    } else {
-      alert('Your Solana balance is insufficient.');
-    }
-  }; */
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction, signTransaction } = useWallet();
 
-  const sendSolanaTokens = () =>{
-    console.log("asds")
-    console.log(user)
-    console.log(user?.user?.user_metadata.token)
-  }
+   const connectWallet = async () => {
+       if (window.solana && window.solana.isPhantom) {
+         try {
+           await window.solana.connect();
+           setIsConnected(true);
+   
+           // Cüzdan bağlandıktan sonra yapılacak işlemleri burada gerçekleştirebilirsiniz
+           const { publicKey } = window.solana;
+           if (publicKey) {
+             localStorage.setItem('walletAddress', publicKey.toBase58());
+           }
+         } catch (error) {
+           console.error("Phantom cüzdanına bağlanırken bir hata oluştu:", error);
+         }
+       } else {
+         console.error(
+           "Phantom cüzdanı yüklü değil veya tarayıcınız tarafından desteklenmiyor."
+         );
+       }
+     };
+
+
+     const handleBuy = useCallback(async () => {
+       try {
+           if (!wallet) {
+               console.error('Cüzdan bağlı değil');
+               return;
+           }
+   
+           
+   
+           // Ödeme miktarını lamport cinsinden hesapla
+           const lamports = 1 * LAMPORTS_PER_SOL;
+   
+           // İşlemi oluştur
+           const transaction = new Transaction().add(
+               SystemProgram.transfer({
+                   fromPubkey: new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik'),
+                   toPubkey:  publicKey,
+                   lamports: parseFloat(lamports),
+                   feePayer: new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik'), // Ücret ödeyen hesabı belirt
+               })
+           );
+   
+           // Blokhash değerini ekle
+           transaction.feePayer = new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik')
+           transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+   
+           // İşlemi imzala
+           const { signature } = await window.solana.signAndSendTransaction(transaction);
+   
+           // İşlemi gönder
+        
+         const result =  await connection.confirmTransaction(signature);
+           console.log('Transaction successful:', result);
+       } catch (error) {
+           console.error("Hata: ", error);
+       }
+   }, [wallet, user?.user?.user_metadata.token, publicKey, sendTransaction, signTransaction, connection]);
+
 
   const openPhantomHelp = () => {
     // Open help link
@@ -111,7 +163,27 @@ const ProfilePage = () => {
   </Box>
 </Paper>
 
-        <Button variant="contained" onClick={() => setModalVisible(true)} mt={3}   
+{!wallet && (
+                    <Button
+                        size="large"
+                        onClick={connectWallet}
+                        sx={{
+                            marginLeft: 'auto',
+                            marginRight: '20px',
+                            backgroundColor: "#6949FD",
+                            color: "#FEFEFE",
+                            fontWeight: "bold",
+                            '&:hover': {
+                                backgroundColor: '#7E64FF',
+                            },
+                        }}
+                    >
+                        Login with Wallet
+                    </Button>
+                )}
+ {wallet && (
+  <>
+   <Button variant="contained" onClick={handleBuy} mt={3}   
     sx={{
     mt: 3,
     backgroundColor: "#6949FD",
@@ -121,49 +193,14 @@ const ProfilePage = () => {
   }}>
           Withdrawal SOL
         </Button>
+<WalletMultiButton />
+                    <WalletDisconnectButton /></>
+     
+           )}
       </Box>
-      <Modal open={modalVisible} onClose={() => setModalVisible(false)}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          bgcolor="rgba(0, 0, 0, 0.7)"
-          p={3}
-          borderRadius={10}
-          maxWidth={400}
-          mx="auto"
-          mt={10}
-        >
-          <AccountCircleIcon  size="2x" color="white" onClick={openPhantomHelp} />
-          <TextField
-            label="Enter Solana Address"
-            variant="outlined"
-            margin="normal"
-            value={solanaAddress}
-            onChange={(e) => setSolanaAddress(e.target.value)}
-          />
-          <TextField
-            label="Amount of Solana"
-            variant="outlined"
-            margin="normal"
-            value={12}
-            disabled
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => sendSolanaTokens(solanaAddress)}
-            disabled={isButtonDisabled}
-            mt={2}
-          >
-            Send Solana
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => setModalVisible(false)} mt={2}>
-            Close
-          </Button>
-        </Box>
-      </Modal>
+
+
+     
     </Box>
     </>
   );
