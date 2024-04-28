@@ -1,73 +1,104 @@
 /* eslint-disable no-unused-vars */
-import React, { useCallback } from 'react';
+import React, { useCallback,useState } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {
+    WalletModalProvider,
+    WalletDisconnectButton,
+    WalletMultiButton,
+  } from "@solana/wallet-adapter-react-ui";
+  
+import supabase from '../utils/supabase';
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 import PropTypes from 'prop-types';
 
 import { usePicket } from "@picketapi/picket-react";
-import { Transaction, SystemProgram, PublicKey } from '@solana/web3.js';
+import { Transaction, SystemProgram, PublicKey,LAMPORTS_PER_SOL, Keypair, Connection  } from '@solana/web3.js';
 
-// @solana/wallet-adapter-react ekleyin
-import { useWallet } from '@solana/wallet-adapter-react';
 
 
 function ShopCard({ product }) {
     const { name, price, quantity, image } = product;
+    const [isConnected, setIsConnected] = useState(false);
 
-    const { 
-        isAuthenticating, 
-        isAuthenticated, 
-        authState, 
-        logout,
-        sendTransaction,
-        login
-    } = usePicket();
+   const wallet = localStorage.getItem('walletAddress');
 
-    const { wallet } = useWallet();
+   const { connection } = useConnection();
+   const { publicKey, sendTransaction, signTransaction } = useWallet();
 
-    // useCallback'ler bileşenin dışına alındı
-    const handleLogin = useCallback(async () => {
-        let auth = authState;
-        if (!auth) {
-            auth = await login({ chain: "solana" });
+    const connectWallet = async () => {
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            await window.solana.connect();
+            setIsConnected(true);
+    
+            // Cüzdan bağlandıktan sonra yapılacak işlemleri burada gerçekleştirebilirsiniz
+            const { publicKey } = window.solana;
+            if (publicKey) {
+              localStorage.setItem('walletAddress', publicKey.toBase58());
+            }
+          } catch (error) {
+            console.error("Phantom cüzdanına bağlanırken bir hata oluştu:", error);
+          }
+        } else {
+          console.error(
+            "Phantom cüzdanı yüklü değil veya tarayıcınız tarafından desteklenmiyor."
+          );
         }
+      };
 
-        if (!auth) return;
 
-        localStorage.setItem('accessToken', auth.accessToken);
-        localStorage.setItem('walletAddress', auth.user.walletAddress);
-
-        authState.user.wallet = auth.wallet;
-    }, [authState, login]);
-
-    const handleBuy = useCallback(async () => {
+      const handleBuy = useCallback(async () => {
         try {
-            if (!wallet?.publicKey) {
+            if (!wallet) {
                 console.error('Cüzdan bağlı değil');
                 return;
             }
-
+    
+            
+    
+            // Ödeme miktarını lamport cinsinden hesapla
+            const lamports = price * LAMPORTS_PER_SOL;
+    
+            // İşlemi oluştur
             const transaction = new Transaction().add(
                 SystemProgram.transfer({
-                    fromPubkey: wallet.publicKey,
-                    toPubkey: new PublicKey('HBsikpQzWWfiBdjRzB2idpHaDXFiVqi23m7TrjT4JXik'),
-                    lamports: price * 1000000000,
+                    fromPubkey: publicKey,
+                    toPubkey: new PublicKey('EyoPNUAmEgGh1jnvZYMa2y3cXk8qYFjjPNotrtSY3dUm'),
+                    lamports: lamports,
+                    feePayer: publicKey, // Ücret ödeyen hesabı belirt
                 })
             );
-            const signature = await wallet.signTransaction(transaction);
-            const result = await window.solana.sendTransaction(transaction, [signature]);
+    
+            // Blokhash değerini ekle
+            transaction.feePayer = publicKey
+            transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+    
+            // İşlemi imzala
+            const { signature } = await window.solana.signAndSendTransaction(transaction);
+    
+            // İşlemi gönder
+         
+          const result =  await connection.confirmTransaction(signature);
             console.log('Transaction successful:', result);
         } catch (error) {
             console.error("Hata: ", error);
         }
-    }, [wallet, price]);
+    }, [wallet, price, publicKey, sendTransaction, signTransaction, connection]);
+    
+    
+    
+    
+    
+    
 
-    if (isAuthenticating) return "Loading";
+   
 
     return (
         <Card sx={{ maxWidth: 345, backgroundColor: "#311C7F", borderRadius: 5 }}>
@@ -88,10 +119,10 @@ function ShopCard({ product }) {
                     Price: $SOL {price}
                 </Typography>
 
-                {!authState && (
+                {!wallet && (
                     <Button
                         size="large"
-                        onClick={handleLogin}
+                        onClick={connectWallet}
                         sx={{
                             marginLeft: 'auto',
                             marginRight: '20px',
@@ -107,8 +138,8 @@ function ShopCard({ product }) {
                     </Button>
                 )}
 
-                {authState && (
-                    <Button
+                {wallet && (
+                    <><Button
                         onClick={handleBuy}
                         size="large"
                         sx={{
@@ -124,6 +155,9 @@ function ShopCard({ product }) {
                     >
                         Buy
                     </Button>
+                    <WalletMultiButton />
+                    <WalletDisconnectButton /></>
+         
                 )}
             </CardActions>
         </Card>
