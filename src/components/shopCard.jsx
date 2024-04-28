@@ -156,7 +156,7 @@ function ShopCard({ product }) {
                     >
                         Buy
                     </Button>
-                    <WalletMultiButton />
+                   
                     <WalletDisconnectButton /></>
          
                 )}

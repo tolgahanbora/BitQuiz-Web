@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import  { useState, useCallback } from 'react';
-import { Box, Typography, Modal, TextField, Button, Link, Paper, Container } from '@mui/material';
+import { Box, Typography, Modal, TextField, Button, Link, Paper, Container, Stack } from '@mui/material';
 import Navbar from "../components/nav"
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -182,10 +182,11 @@ const ProfilePage = () => {
                     </Button>
                 )}
  {wallet && (
-  <>
+  <Stack direction={"column"} height={"80px"}>
    <Button variant="contained" onClick={handleBuy} mt={3}   
     sx={{
     mt: 3,
+    mb: 3,
     backgroundColor: "#6949FD",
     "&:hover": {
       backgroundColor: "#6949FF", // 6949FD renginin biraz açığı
@@ -193,8 +194,8 @@ const ProfilePage = () => {
   }}>
           Withdrawal SOL
         </Button>
-<WalletMultiButton />
-                    <WalletDisconnectButton /></>
+<WalletDisconnectButton />
+</Stack>
      
            )}
       </Box>
