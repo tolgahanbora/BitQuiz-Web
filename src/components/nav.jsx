@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import supabase from "../utils/supabase"
 
-import bitquizLogo from "../assets/logos.png"
+import bitquizLogo from "../assets/bitquiz-beyaz.png"
 import avatar from "../assets/avatar.png"
 
 import { Link } from 'react-router-dom';
@@ -72,7 +72,7 @@ function Navbar() {
           <Stack sx={{ display: {xs: "none", md: "flex"}}}>
           <img
          src={bitquizLogo}
-         style={{height: "140px", marginRight: "50px"}}
+         style={{ marginRight: "50px"}}
          />
           </Stack>
       
