@@ -12,7 +12,7 @@ import { useUserContext } from '../context/userContext';
 
 function QuizPage() {
 
-  const user  = useUserContext()
+  const {user}  = useUserContext()
 
   const [showScore, setShowScore] = React.useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

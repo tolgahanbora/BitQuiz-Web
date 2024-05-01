@@ -31,7 +31,7 @@ const ProfilePage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [solanaAddress, setSolanaAddress] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const user = useUserContext();
+  const {user, user2} = useUserContext();
 
   const [isConnected, setIsConnected] = useState(false);
 
@@ -64,13 +64,14 @@ const ProfilePage = () => {
 
      const handleBuy = useCallback(async () => {
        try {
+        console.log("kasjdas",user)
            if (!wallet) {
                console.error('Cüzdan bağlı değil');
                return;
            }
    
            
-   
+           console.log("ajsdhsad", user2)
            // Ödeme miktarını lamport cinsinden hesapla
            const lamports = 1 * LAMPORTS_PER_SOL;
    
@@ -128,7 +129,7 @@ const ProfilePage = () => {
       <Box display="flex" flexDirection="column" alignItems="center" >
         <img src={avatar} alt="Avatar" style={{ width: 100, height: 100, borderRadius: '50%' }} />
         <Typography variant="h5" color="white" gutterBottom>
-  {user && user.user.user_metadata.username}
+  {user && user?.username}
 </Typography>
 
         <Paper
@@ -150,17 +151,17 @@ const ProfilePage = () => {
 >
   <img src={solana} alt="Solana" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
   <Typography variant="h5" gutterBottom>
-    Solana: {user  && user?.user?.user_metadata.token}
+    Solana: {user  && user?.token}
   </Typography>
   <Box display="flex" justifyContent="space-around" width="100%" mt={2}>
     <Typography variant="body1">
-      Game Ticket: {user  &&  user.user.user_metadata.health}
+      Game Ticket: {user  &&  user?.health}
     </Typography>
     <Typography variant="body1">
-      Time Joker: {user  &&  user.user.user_metadata.timingJoker}
+      Time Joker: {user  &&  user?.timingJoker}
     </Typography>
     <Typography variant="body1">
-      Fifty Lucky: {user  &&  user.user.user_metadata.fiftyPercentJoker}
+      Fifty Lucky: {user  &&  user?.fiftyPercentJoker}
     </Typography>
   </Box>
 </Paper>

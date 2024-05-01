@@ -10,6 +10,24 @@ export const useUserContext = () => useContext(UserContext);
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [user2, setUser2] = useState(null);
+
+  const broadcastUser = async () => {
+    try {
+      const channels = supabase.channel('custom-all-channel')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'profiles' },
+          (payload) => {
+            console.log('Payload received:', payload);
+            setUser(payload.new.data);
+          }
+        )
+        .subscribe();
+    } catch (err) {
+      console.error("Error fetching user:", err);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -18,14 +36,24 @@ export const UserContextProvider = ({ children }) => {
         console.error('Error fetching user:', error.message);
         return;
       }
-      setUser(data);
+      
+let { data: profiles } = await supabase
+.from('profiles')
+.select('data')
+.eq("id",data.user.id)
+console.log("detc", profiles[0].data)
+      setUser(profiles[0].data);
     };
 
     fetchUser();
+    broadcastUser()
   }, []);
 
+
+
+
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider  value={{ user, user2 }}>
       {children}
     </UserContext.Provider>
   );

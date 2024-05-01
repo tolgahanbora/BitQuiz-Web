@@ -10,12 +10,12 @@ import supabase from '../utils/supabase';
 function PlayPage() {
 
   const navigate = useNavigate()
-  const user = useUserContext()
+  const {user, user2} = useUserContext()
   const [ticket, setTicket] = useState();
 
 
   // Assume userTickets is the variable holding the number of tickets the user has
-  const userTickets = user?.user.user_metadata.health; // Example value, replace with actual logic
+  const userTickets = user?.health; // Example value, replace with actual logic
 
 
   const updateTicket = async (newTicketValue) => {

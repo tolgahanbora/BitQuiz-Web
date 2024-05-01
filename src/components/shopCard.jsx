@@ -36,6 +36,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
    const { publicKey, sendTransaction, signTransaction } = useWallet();
 
     const connectWallet = async () => {
+
         if (window.solana && window.solana.isPhantom) {
           try {
             await window.solana.connect();
@@ -168,12 +169,12 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
 
       const handleBuy = useCallback(async (itemPrice, quantitys) => {
         try {
-            if (!wallet) {
+            if (!connection) {
                 console.error('Cüzdan bağlı değil');
                 return;
             }
     
-            
+            console.log()
     
             // Ödeme miktarını lamport cinsinden hesapla
             const lamports = itemPrice * LAMPORTS_PER_SOL;
@@ -295,7 +296,8 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
                 )}
 
                 {wallet && (
-                    <Stack direction={"column"} gap={1}><Button
+                    <Stack direction={"column"} gap={1}>
+                      <Button
                         onClick={onHandleBuySolana}
                         size="large"
                         fullWidth

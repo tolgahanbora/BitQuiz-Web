@@ -34,7 +34,7 @@ const FiftyChanceJoker = [
 
 
 function ShopPage() {
-  const user = useUserContext()
+  const {user, user2} = useUserContext()
   return (
     <>
   
@@ -45,19 +45,19 @@ function ShopPage() {
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <TicketIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Game Ticket: {user?.user.user_metadata.health}
+      Game Ticket: {user?.health}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <AccessTimeIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Time Joker: {user?.user.user_metadata.timingJoker}
+      Time Joker: {user2?.timingJoker}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <PercentIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Fifty Lucky: {user?.user.user_metadata.fiftyPercentJoker}
+      Fifty Lucky: {user2?.fiftyPercentJoker}
     </Typography>
   </Box>
 </Box>
@@ -84,7 +84,7 @@ function ShopPage() {
         </Grid>
         {FiftyChanceJoker.map((product, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <ShopCard product={product} health={user?.user.user_metadata.health} timingJoker={user?.user.user_metadata.timingJoker} fiftyLucky={user?.user.user_metadata.fiftyPercentJoker} />
+            <ShopCard product={product} health={user?.health} timingJoker={user?.timingJoker} fiftyLucky={user?.fiftyPercentJoker} />
           </Grid>
         ))}
       </Grid>
