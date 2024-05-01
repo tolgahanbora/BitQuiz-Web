@@ -12,24 +12,24 @@ import PercentIcon from '@mui/icons-material/Percent';
 import { useUserContext } from '../context/userContext';
 
 const GameTicket = [
-  { name: 'Game Ticket', price: 1, quantity: 0.12, image: ticket },
-  { name: 'Game Ticket x3', price: 2, quantity: 0.3, image: ticket },
-  { name: 'Game Ticket x5', price: 3, quantity: 0.5, image: ticket },
-  { name: 'Game Ticket x10', price: 3, quantity: 0.7, image: ticket },
+  { name: 'Game Ticket', price: 0.12, quantity: 0.12, image: ticket },
+  { name: 'Game Ticket x3', price: 0.3, quantity: 0.3, image: ticket },
+  { name: 'Game Ticket x5', price: 0.5, quantity: 0.5, image: ticket },
+  { name: 'Game Ticket x10', price: 0.7, quantity: 0.7, image: ticket },
 ];
 
 const TimeJoker = [
-  { name: 'Timing Joker', price: 1, quantity: 0.07, image: timeJoker },
-  { name: 'Timing Joker x3', price: 2, quantity: 0.15, image: timeJoker },
-  { name: 'Timing Joker x5', price: 3, quantity: 0.2, image: timeJoker },
-  { name: 'Timing Joker x10', price: 3, quantity: 0.3, image: timeJoker },
+  { name: 'Timing Joker', price: 0.07, quantity: 0.07, image: timeJoker },
+  { name: 'Timing Joker x3', price: 0.15, quantity: 0.15, image: timeJoker },
+  { name: 'Timing Joker x5', price: 0.2, quantity: 0.2, image: timeJoker },
+  { name: 'Timing Joker x10', price: 0.3, quantity: 0.3, image: timeJoker },
 ];
 
 const FiftyChanceJoker = [
-  { name: 'Fifty Chance', price: 1, quantity: 0.1, image: fiftyLucky },
-  { name: 'Fifty Chance x3', price: 2, quantity: 0.27, image: fiftyLucky },
-  { name: 'Fifty Chance x5', price: 3, quantity: 0.35, image: fiftyLucky },
-  { name: 'Fifty Chance x10', price: 3, quantity: 0.5, image: fiftyLucky },
+  { name: 'Fifty Chance', price: 0.1, quantity: 0.1, image: fiftyLucky },
+  { name: 'Fifty Chance x3', price:  0.27, quantity: 0.27, image: fiftyLucky },
+  { name: 'Fifty Chance x5', price: 0.35, quantity: 0.35, image: fiftyLucky },
+  { name: 'Fifty Chance x10', price: 0.5, quantity: 0.5, image: fiftyLucky },
 ];
 
 

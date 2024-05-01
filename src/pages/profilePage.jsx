@@ -12,6 +12,7 @@ import { useUserContext } from '../context/userContext';
 import avatar from "../assets/avatar.png";
 import solana from "../assets/solanaLogoMark.png";
 import bitquizBackground from "../assets/Bıtquız_background.png";
+import WalletModal from '../components/walletAlertModal';
 
 import {
   WalletModalProvider,
@@ -33,6 +34,8 @@ const ProfilePage = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {user, user2} = useUserContext();
 
+
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
   const wallet = localStorage.getItem('walletAddress');
@@ -64,8 +67,7 @@ const ProfilePage = () => {
 
      const handleBuy = useCallback(async () => {
        try {
-        console.log("kasjdas",user)
-           if (!wallet) {
+           if (!user?.token < 1) {
                console.error('Cüzdan bağlı değil');
                return;
            }
@@ -73,7 +75,7 @@ const ProfilePage = () => {
            
            console.log("ajsdhsad", user2)
            // Ödeme miktarını lamport cinsinden hesapla
-           const lamports = 1 * LAMPORTS_PER_SOL;
+           const lamports =  user?.token * LAMPORTS_PER_SOL;
    
            // İşlemi oluştur
            const transaction = new Transaction().add(
@@ -96,10 +98,16 @@ const ProfilePage = () => {
         
          const result =  await connection.confirmTransaction(signature);
            console.log('Transaction successful:', result);
+           if(result) {
+            const { data, error } = await supabase.auth.updateUser({
+              data: { token: 0 }
+            })
+           }
        } catch (error) {
            console.error("Hata: ", error);
+           setIsWalletModalOpen(true)
        }
-   }, [wallet, user?.user?.user_metadata.token, publicKey, sendTransaction, signTransaction, connection]);
+   }, [wallet, publicKey, sendTransaction, signTransaction, connection]);
 
 
   const openPhantomHelp = () => {
@@ -123,10 +131,12 @@ const ProfilePage = () => {
   
   }}
 >
+
       <Typography variant="h3" color="white" gutterBottom>
         Profile
       </Typography>
       <Box display="flex" flexDirection="column" alignItems="center" >
+      <WalletModal open={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
         <img src={avatar} alt="Avatar" style={{ width: 100, height: 100, borderRadius: '50%' }} />
         <Typography variant="h5" color="white" gutterBottom>
   {user && user?.username}
@@ -166,25 +176,7 @@ const ProfilePage = () => {
   </Box>
 </Paper>
 
-{!wallet && (
-                    <Button
-                        size="large"
-                        onClick={connectWallet}
-                        sx={{
-                            marginLeft: 'auto',
-                            marginRight: '20px',
-                            backgroundColor: "#6949FD",
-                            color: "#FEFEFE",
-                            fontWeight: "bold",
-                            '&:hover': {
-                                backgroundColor: '#7E64FF',
-                            },
-                        }}
-                    >
-                        Login with Wallet
-                    </Button>
-                )}
- {wallet && (
+
   
   <Stack direction={"row"} mt={4} gap={2}>
      <WalletMultiButton />
@@ -202,7 +194,6 @@ const ProfilePage = () => {
 <WalletDisconnectButton />
 </Stack>
      
-           )}
       </Box>
 
 

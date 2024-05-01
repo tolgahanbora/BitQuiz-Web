@@ -13,7 +13,7 @@ import {
     WalletDisconnectButton,
     WalletMultiButton,
   } from "@solana/wallet-adapter-react-ui";
-  
+import WalletModal from './walletAlertModal';
 import supabase from '../utils/supabase';
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -29,6 +29,8 @@ import { Stack } from '@mui/material';
 function ShopCard({ product,health, timingJoker, fiftyLucky }) {
     const { name, price, quantity, image } = product;
     const [isConnected, setIsConnected] = useState(false);
+    const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+
 
    const wallet = localStorage.getItem('walletAddress');
 
@@ -55,6 +57,14 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
             "Phantom cüzdanı yüklü değil veya tarayıcınız tarafından desteklenmiyor."
           );
         }
+      };
+
+      const handleOpenWalletModal = () => {
+        setIsWalletModalOpen(true);
+      };
+
+      const handleClose = () => {
+        setIsWalletModalOpen(true);
       };
 
       const addTicket = async (newTicket) => {
@@ -117,48 +127,64 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
         let quantitys;
         switch (name) {
             case 'Game Ticket':
-                itemPrice = 1;
+                itemPrice = 0.12;
                 quantitys = 1;
                 handleBuy(itemPrice, quantitys)
                 break;
             case 'Game Ticket x3':
-                itemPrice = 2;
+                itemPrice = 0.3;
                 quantitys = 3;
                 handleBuy(itemPrice, quantitys)
                 break;
             case 'Game Ticket x5':
-                itemPrice = 3;
+                itemPrice = 0.5;
                 quantitys = 5;
                 handleBuy(itemPrice, quantitys)
                 break;
             case 'Game Ticket x10':
-                itemPrice = 3;
+                itemPrice = 0.7;
                 quantitys = 10;
                 handleBuy(itemPrice, quantitys)
                 break;
             case 'Timing Joker':
-                itemPrice = 1;
+                itemPrice = 0.07;
+                quantitys = 1;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Timing Joker x3':
-                itemPrice = 2;
+                itemPrice = 0.15;
+                quantitys = 3;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Timing Joker x5':
-                itemPrice = 3;
+                itemPrice = 0.2;
+                quantitys = 5;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Timing Joker x10':
-                itemPrice = 3;
+                itemPrice = 0.3;
+                quantitys = 10;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Fifty Chance':
-                itemPrice = 1;
+                itemPrice = 0.1;
+                quantitys = 1;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Fifty Chance x3':
-                itemPrice = 2;
+                itemPrice = 0.27;
+                quantitys = 3;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Fifty Chance x5':
-                itemPrice = 3;
+                itemPrice = 0.35;
+                quantitys = 5;
+                handleBuy(itemPrice, quantitys)
                 break;
             case 'Fifty Chance x10':
-                itemPrice = 3;
+                itemPrice = 0.5;
+                quantitys = 10;
+                handleBuy(itemPrice, quantitys)
                 break;
             default:
                 console.error('Bilinmeyen ürün:', name);
@@ -244,6 +270,8 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
       }
         } catch (error) {
             console.error("Hata: ", error);
+            console.log("errordur bu", error)
+            setIsWalletModalOpen(true)
         }
     }, [wallet, price, publicKey, sendTransaction, signTransaction, connection]);
     
@@ -257,6 +285,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
 
     return (
         <Card sx={{ maxWidth: 345, backgroundColor: "#311C7F", borderRadius: 5 }}>
+          <WalletModal open={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
             <CardMedia
                 sx={{ height: 170 }}
                 image={image}
@@ -270,33 +299,8 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                {!wallet && (
-                  <>
-                
-                    <Typography variant="body2" color="text.secondary" sx={{ marginRight: 'auto', marginLeft: '20px', color: "#FEFEFE" }}>
-                    Price: $SOL {price}
-                </Typography>
-                    <Button
-                        size="large"
-                        onClick={connectWallet}
-                        sx={{
-                            marginLeft: 'auto',
-                            marginRight: '20px',
-                            backgroundColor: "#6949FD",
-                            color: "#FEFEFE",
-                            fontWeight: "bold",
-                            '&:hover': {
-                                backgroundColor: '#7E64FF',
-                            },
-                        }}
-                    >
-                        Login with Wallet
-                    </Button>
-                    </>
-                )}
-
-                {wallet && (
                     <Stack direction={"column"} gap={1}>
+                    <Stack direction={"row"} gap={1}>
                       <Button
                         onClick={onHandleBuySolana}
                         size="large"
@@ -315,10 +319,27 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
                     >
                     Buy {price}$SOL
                     </Button>
+                    <Button
+                        onClick={onHandleBuySolana}
+                        size="large"
+                        fullWidth
+                        sx={{
+                        
+                            marginLeft: 'auto',
+                            marginRight: '20px',
+                            backgroundColor: "#6949FD",
+                            color: "#FEFEFE",
+                            fontWeight: "bold",
+                            '&:hover': {
+                                backgroundColor: '#7E64FF',
+                            },
+                        }}
+                    >
+                    Buy {price}$SOL
+                    </Button>
+                    </Stack>
                    <WalletMultiButton />
                     <WalletDisconnectButton /></Stack>
-         
-                )}
             </CardActions>
         </Card>
     );

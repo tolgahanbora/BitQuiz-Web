@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
@@ -6,18 +7,15 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import CloseIcon from '@mui/icons-material/Close';
 import { Box } from '@mui/material';
 
-const WalletModal = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+const WalletModal = ({open,onClose}) => {
+ 
 
   return (
     <div>
-      <Button onClick={handleOpen}>Cüzdan Bağlayın</Button>
+    
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         sx={{
@@ -28,8 +26,8 @@ const WalletModal = () => {
       >
         <Box
           role="presentation"
-          onClick={handleClose}
-          onKeyDown={handleClose}
+          onClick={onClose}
+          onKeyDown={onClose}
           sx={{
             outline: 0,
             backgroundColor: 'white',

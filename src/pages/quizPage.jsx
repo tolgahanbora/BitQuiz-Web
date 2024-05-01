@@ -9,10 +9,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import Score from '../components/scoreCard';
 import supabase from '../utils/supabase';
 import { useUserContext } from '../context/userContext';
+import { useNavigate   } from 'react-router-dom';
 
 function QuizPage() {
 
+
   const {user}  = useUserContext()
+  const history = useNavigate();
+  
+
 
   const [showScore, setShowScore] = React.useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -33,10 +38,10 @@ function QuizPage() {
 
 
   const [extendedTimer, setExtendedTimer] = useState(0);
-  const [timingJoker, setTimingJoker] = useState(user.user.user_metadata.timingJoker)
+  const [timingJoker, setTimingJoker] = useState(user?.timingJoker)
 
 
-  const [jokerCount, setJokerCount] = useState(user.user.user_metadata.fiftyPercentJoker); // Assuming the user starts with 3 jokers
+  const [jokerCount, setJokerCount] = useState(user?.fiftyPercentJoker); // Assuming the user starts with 3 jokers
   const [jokerUsed, setJokerUsed] = useState(false);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState()
 
@@ -265,7 +270,11 @@ const handleNextQuestion = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setQuestionCount(questionCount + 1);
 };
- 
+
+
+if (user?.health < 1) {
+  history('/play'); // Redirect to '/play' page using useHistory hook
+}
 
   return (
     <>
@@ -275,7 +284,7 @@ const handleNextQuestion = () => {
       {showScore ? (
         <Paper elevation={3} style={{ padding: 20, textAlign: 'center', width: "150%", height: "170%", backgroundColor: "#1F1147" }}>
      
-         <Score token={totalEarnedBTC} trueAnswers={trueAnswer} totalToken={user?.user?.user_metadata.token}/>
+         <Score token={totalEarnedBTC} trueAnswers={trueAnswer} totalToken={user?.token}/>
         </Paper>
       ) : (
         <Paper elevation={3} style={{ padding: 20, backgroundColor: "transparent" }}>
