@@ -26,7 +26,7 @@ import { Stack } from '@mui/material';
 
 
 
-function ShopCard({ product,health, timingJoker, fiftyLucky }) {
+function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
     const { name, price, quantity, image } = product;
     const [isConnected, setIsConnected] = useState(false);
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -37,27 +37,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
    const { connection } = useConnection();
    const { publicKey, sendTransaction, signTransaction } = useWallet();
 
-    const connectWallet = async () => {
-
-        if (window.solana && window.solana.isPhantom) {
-          try {
-            await window.solana.connect();
-            setIsConnected(true);
-    
-            // Cüzdan bağlandıktan sonra yapılacak işlemleri burada gerçekleştirebilirsiniz
-            const { publicKey } = window.solana;
-            if (publicKey) {
-              localStorage.setItem('walletAddress', publicKey.toBase58());
-            }
-          } catch (error) {
-            console.error("Phantom cüzdanına bağlanırken bir hata oluştu:", error);
-          }
-        } else {
-          console.error(
-            "Phantom cüzdanı yüklü değil veya tarayıcınız tarafından desteklenmiyor."
-          );
-        }
-      };
+   
 
       const handleOpenWalletModal = () => {
         setIsWalletModalOpen(true);
@@ -192,6 +172,77 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
         }
       }
 
+      //In game token
+      const onHandleBuySolanaGame = async () =>{
+        let itemPrice;
+        let quantitys;
+        switch (name) {
+            case 'Game Ticket':
+                itemPrice = 0.12;
+                quantitys = 1;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x3':
+                itemPrice = 0.3;
+                quantitys = 3;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x5':
+                itemPrice = 0.5;
+                quantitys = 5;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x10':
+                itemPrice = 0.7;
+                quantitys = 10;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Timing Joker':
+                itemPrice = 0.07;
+                quantitys = 1;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Timing Joker x3':
+                itemPrice = 0.15;
+                quantitys = 3;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Timing Joker x5':
+                itemPrice = 0.2;
+                quantitys = 5;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Timing Joker x10':
+                itemPrice = 0.3;
+                quantitys = 10;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Fifty Chance':
+                itemPrice = 0.1;
+                quantitys = 1;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Fifty Chance x3':
+                itemPrice = 0.27;
+                quantitys = 3;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Fifty Chance x5':
+                itemPrice = 0.35;
+                quantitys = 5;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            case 'Fifty Chance x10':
+                itemPrice = 0.5;
+                quantitys = 10;
+                handleBuyWithToken(itemPrice, quantitys)
+                break;
+            default:
+                console.error('Bilinmeyen ürün:', name);
+                return;
+        }
+      }
+
 
       const handleBuy = useCallback(async (itemPrice, quantitys) => {
         try {
@@ -276,6 +327,69 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
     }, [wallet, price, publicKey, sendTransaction, signTransaction, connection]);
     
     
+
+    //in game token
+    const handleBuyWithToken = useCallback(async (itemPrice, quantitys) => {
+      try {
+          if (token < itemPrice) {
+              alert('You have not enough tokens to buy.');
+              return;
+          }
+  
+          const newToken = await token  - itemPrice;
+          console.log(newToken)
+      
+          await supabase.auth.updateUser({
+              data: { token: newToken },
+          });
+         
+      switch (name) {
+        case 'Game Ticket':
+            addTicket(health + quantitys);
+            break;
+        case 'Game Ticket x3':
+            addTicket(health + quantitys);
+            break;
+        case 'Game Ticket x5':
+            addTicket(health + quantitys);
+            break;
+        case 'Game Ticket x10':
+            addTicket(health + quantitys);
+            break;
+        case 'Timing Joker':
+            addTimingJoker(timingJoker + quantitys);
+            break;
+        case 'Timing Joker x3':
+            addTimingJoker(timingJoker + quantitys);
+            break;
+        case 'Timing Joker x5':
+            addTimingJoker(timingJoker + quantitys);
+            break;
+        case 'Timing Joker x10':
+            addTimingJoker(timingJoker + quantitys);
+            break;
+        case 'Fifty Chance':
+            addFiftyChance(fiftyLucky + quantitys);
+            break;
+        case 'Fifty Chance x3':
+            addFiftyChance(fiftyLucky + quantitys);
+            break;
+        case 'Fifty Chance x5':
+            addFiftyChance(fiftyLucky + quantitys);
+            break;
+        case 'Fifty Chance x10':
+            addFiftyChance(fiftyLucky + quantitys);
+            break;
+        default:
+            console.error('Bilinmeyen ürün:', name);
+            break;
+    }
+      } catch (error) {
+          console.error("Hata: ", error);
+          console.log("errordur bu", error)
+          setIsWalletModalOpen(true)
+      }
+  }, [ price]);
     
     
     
@@ -320,7 +434,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky }) {
                     Buy {price}$SOL
                     </Button>
                     <Button
-                        onClick={onHandleBuySolana}
+                        onClick={onHandleBuySolanaGame}
                         size="large"
                         fullWidth
                         sx={{

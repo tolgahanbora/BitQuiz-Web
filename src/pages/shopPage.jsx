@@ -68,7 +68,7 @@ function ShopPage() {
         </Grid>
         {GameTicket.map((product, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <ShopCard product={product} />
+            <ShopCard product={product} health={user?.health} timingJoker={user?.timingJoker} fiftyLucky={user?.fiftyPercentJoker} token={user?.token} />
           </Grid>
         ))}
         <Grid item xs={12}>
@@ -76,7 +76,7 @@ function ShopPage() {
         </Grid>
         {TimeJoker.map((product, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <ShopCard product={product} />
+            <ShopCard product={product} health={user?.health} timingJoker={user?.timingJoker} fiftyLucky={user?.fiftyPercentJoker} token={user?.token} />
           </Grid>
         ))}
         <Grid item xs={12}>
@@ -84,7 +84,7 @@ function ShopPage() {
         </Grid>
         {FiftyChanceJoker.map((product, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <ShopCard product={product} health={user?.health} timingJoker={user?.timingJoker} fiftyLucky={user?.fiftyPercentJoker} />
+            <ShopCard product={product} health={user?.health} timingJoker={user?.timingJoker} fiftyLucky={user?.fiftyPercentJoker} token={user?.token}/>
           </Grid>
         ))}
       </Grid>
