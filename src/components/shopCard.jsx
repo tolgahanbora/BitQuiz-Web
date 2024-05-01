@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useCallback,useState } from 'react';
@@ -8,7 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {
-    WalletModalProvider,
+  
     WalletDisconnectButton,
     WalletMultiButton,
   } from "@solana/wallet-adapter-react-ui";
@@ -21,10 +22,11 @@ import PropTypes from 'prop-types';
 
 import { usePicket } from "@picketapi/picket-react";
 import { Transaction, SystemProgram, PublicKey,LAMPORTS_PER_SOL, Keypair, Connection  } from '@solana/web3.js';
+import { Stack } from '@mui/material';
 
 
 
-function ShopCard({ product }) {
+function ShopCard({ product,health, timingJoker, fiftyLucky }) {
     const { name, price, quantity, image } = product;
     const [isConnected, setIsConnected] = useState(false);
 
@@ -54,8 +56,117 @@ function ShopCard({ product }) {
         }
       };
 
+      const addTicket = async (newTicket) => {
+        try {
+          const { data, error } = await supabase.auth.updateUser({
+            data: { health: newTicket }
+          })
 
-      const handleBuy = useCallback(async () => {
+          if (error) {
+            console.error('Error updating user metadata:', error);
+          } else {
+            // Update state to reflect the new value
+
+            console.log('User metadata updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating user metadata:', error);
+        }
+      }
+
+      const addTimingJoker = async (newTimingJoker) => {
+        try {
+          const { data, error } = await supabase.auth.updateUser({
+            data: { health: newTimingJoker}
+          })
+
+          if (error) {
+            console.error('Error updating user metadata:', error);
+          } else {
+            // Update state to reflect the new value
+
+            console.log('User metadata updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating user metadata:', error);
+        }
+      }
+
+      const addFiftyChance = async (newFiftyChance) => {
+        try {
+          const { data, error } = await supabase.auth.updateUser({
+            data: { health: newFiftyChance }
+          })
+
+          if (error) {
+            console.error('Error updating user metadata:', error);
+          } else {
+            // Update state to reflect the new value
+
+            console.log('User metadata updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating user metadata:', error);
+        }
+      }
+
+
+      const onHandleBuySolana = async () =>{
+        let itemPrice;
+        let quantitys;
+        switch (name) {
+            case 'Game Ticket':
+                itemPrice = 1;
+                quantitys = 1;
+                handleBuy(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x3':
+                itemPrice = 2;
+                quantitys = 3;
+                handleBuy(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x5':
+                itemPrice = 3;
+                quantitys = 5;
+                handleBuy(itemPrice, quantitys)
+                break;
+            case 'Game Ticket x10':
+                itemPrice = 3;
+                quantitys = 10;
+                handleBuy(itemPrice, quantitys)
+                break;
+            case 'Timing Joker':
+                itemPrice = 1;
+                break;
+            case 'Timing Joker x3':
+                itemPrice = 2;
+                break;
+            case 'Timing Joker x5':
+                itemPrice = 3;
+                break;
+            case 'Timing Joker x10':
+                itemPrice = 3;
+                break;
+            case 'Fifty Chance':
+                itemPrice = 1;
+                break;
+            case 'Fifty Chance x3':
+                itemPrice = 2;
+                break;
+            case 'Fifty Chance x5':
+                itemPrice = 3;
+                break;
+            case 'Fifty Chance x10':
+                itemPrice = 3;
+                break;
+            default:
+                console.error('Bilinmeyen ürün:', name);
+                return;
+        }
+      }
+
+
+      const handleBuy = useCallback(async (itemPrice, quantitys) => {
         try {
             if (!wallet) {
                 console.error('Cüzdan bağlı değil');
@@ -65,7 +176,7 @@ function ShopCard({ product }) {
             
     
             // Ödeme miktarını lamport cinsinden hesapla
-            const lamports = price * LAMPORTS_PER_SOL;
+            const lamports = itemPrice * LAMPORTS_PER_SOL;
     
             // İşlemi oluştur
             const transaction = new Transaction().add(
@@ -88,6 +199,48 @@ function ShopCard({ product }) {
          
           const result =  await connection.confirmTransaction(signature);
             console.log('Transaction successful:', result);
+              // Satın alma işlemi başarılıysa ilgili ürünü kullanıcıya ekle
+        switch (name) {
+          case 'Game Ticket':
+              addTicket(health + quantitys);
+              break;
+          case 'Game Ticket x3':
+              addTicket(health + quantitys);
+              break;
+          case 'Game Ticket x5':
+              addTicket(health + quantitys);
+              break;
+          case 'Game Ticket x10':
+              addTicket(health + quantitys);
+              break;
+          case 'Timing Joker':
+              addTimingJoker(timingJoker + quantitys);
+              break;
+          case 'Timing Joker x3':
+              addTimingJoker(timingJoker + quantitys);
+              break;
+          case 'Timing Joker x5':
+              addTimingJoker(timingJoker + quantitys);
+              break;
+          case 'Timing Joker x10':
+              addTimingJoker(timingJoker + quantitys);
+              break;
+          case 'Fifty Chance':
+              addFiftyChance(fiftyLucky + quantitys);
+              break;
+          case 'Fifty Chance x3':
+              addFiftyChance(fiftyLucky + quantitys);
+              break;
+          case 'Fifty Chance x5':
+              addFiftyChance(fiftyLucky + quantitys);
+              break;
+          case 'Fifty Chance x10':
+              addFiftyChance(fiftyLucky + quantitys);
+              break;
+          default:
+              console.error('Bilinmeyen ürün:', name);
+              break;
+      }
         } catch (error) {
             console.error("Hata: ", error);
         }
@@ -116,11 +269,12 @@ function ShopCard({ product }) {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant="body2" color="text.secondary" sx={{ marginRight: 'auto', marginLeft: '20px', color: "#FEFEFE" }}>
+                {!wallet && (
+                  <>
+                
+                    <Typography variant="body2" color="text.secondary" sx={{ marginRight: 'auto', marginLeft: '20px', color: "#FEFEFE" }}>
                     Price: $SOL {price}
                 </Typography>
-
-                {!wallet && (
                     <Button
                         size="large"
                         onClick={connectWallet}
@@ -137,13 +291,16 @@ function ShopCard({ product }) {
                     >
                         Login with Wallet
                     </Button>
+                    </>
                 )}
 
                 {wallet && (
-                    <><Button
-                        onClick={handleBuy}
+                    <Stack direction={"column"} gap={1}><Button
+                        onClick={onHandleBuySolana}
                         size="large"
+                        fullWidth
                         sx={{
+                        
                             marginLeft: 'auto',
                             marginRight: '20px',
                             backgroundColor: "#6949FD",
@@ -154,10 +311,10 @@ function ShopCard({ product }) {
                             },
                         }}
                     >
-                        Buy
+                    Buy {price}$SOL
                     </Button>
-                   
-                    <WalletDisconnectButton /></>
+                   <WalletMultiButton />
+                    <WalletDisconnectButton /></Stack>
          
                 )}
             </CardActions>

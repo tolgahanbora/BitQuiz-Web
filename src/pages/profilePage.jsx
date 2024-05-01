@@ -117,13 +117,15 @@ const ProfilePage = () => {
   sx={{
     width: '100%', // Set width to 100%
     backgroundColor: '#1F1147',
+    height: '120%',
+    minHeight: '111vh'
   
   }}
 >
       <Typography variant="h3" color="white" gutterBottom>
         Profile
       </Typography>
-      <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
+      <Box display="flex" flexDirection="column" alignItems="center" >
         <img src={avatar} alt="Avatar" style={{ width: 100, height: 100, borderRadius: '50%' }} />
         <Typography variant="h5" color="white" gutterBottom>
   {user && user.user.user_metadata.username}
@@ -182,11 +184,12 @@ const ProfilePage = () => {
                     </Button>
                 )}
  {wallet && (
-  <Stack direction={"column"} height={"80px"}>
-   <Button variant="contained" onClick={handleBuy} mt={3}   
+  
+  <Stack direction={"row"} mt={4} gap={2}>
+     <WalletMultiButton />
+   <Button variant="contained" onClick={handleBuy}    
     sx={{
-    mt: 3,
-    mb: 3,
+
     backgroundColor: "#6949FD",
     "&:hover": {
       backgroundColor: "#6949FF", // 6949FD renginin biraz açığı
@@ -194,6 +197,7 @@ const ProfilePage = () => {
   }}>
           Withdrawal SOL
         </Button>
+       
 <WalletDisconnectButton />
 </Stack>
      

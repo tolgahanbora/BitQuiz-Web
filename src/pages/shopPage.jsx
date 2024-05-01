@@ -12,24 +12,24 @@ import PercentIcon from '@mui/icons-material/Percent';
 import { useUserContext } from '../context/userContext';
 
 const GameTicket = [
-  { name: 'Game Ticket', price: 1, quantity: 1, image: ticket },
-  { name: 'Game Ticket x3', price: 2, quantity: 3, image: ticket },
-  { name: 'Game Ticket x5', price: 3, quantity: 5, image: ticket },
-  { name: 'Game Ticket x10', price: 3, quantity: 10, image: ticket },
+  { name: 'Game Ticket', price: 1, quantity: 0.12, image: ticket },
+  { name: 'Game Ticket x3', price: 2, quantity: 0.3, image: ticket },
+  { name: 'Game Ticket x5', price: 3, quantity: 0.5, image: ticket },
+  { name: 'Game Ticket x10', price: 3, quantity: 0.7, image: ticket },
 ];
 
 const TimeJoker = [
-  { name: 'Timing Joker', price: 1, quantity: 1, image: timeJoker },
-  { name: 'Timing Joker x3', price: 2, quantity: 3, image: timeJoker },
-  { name: 'Timing Joker x5', price: 3, quantity: 5, image: timeJoker },
-  { name: 'Timing Joker x10', price: 3, quantity: 10, image: timeJoker },
+  { name: 'Timing Joker', price: 1, quantity: 0.07, image: timeJoker },
+  { name: 'Timing Joker x3', price: 2, quantity: 0.15, image: timeJoker },
+  { name: 'Timing Joker x5', price: 3, quantity: 0.2, image: timeJoker },
+  { name: 'Timing Joker x10', price: 3, quantity: 0.3, image: timeJoker },
 ];
 
 const FiftyChanceJoker = [
-  { name: 'Fifty Chance', price: 1, quantity: 1, image: fiftyLucky },
-  { name: 'Fifty Chance x3', price: 2, quantity: 3, image: fiftyLucky },
-  { name: 'Fifty Chance x5', price: 3, quantity: 5, image: fiftyLucky },
-  { name: 'Fifty Chance x10', price: 3, quantity: 10, image: fiftyLucky },
+  { name: 'Fifty Chance', price: 1, quantity: 0.1, image: fiftyLucky },
+  { name: 'Fifty Chance x3', price: 2, quantity: 0.27, image: fiftyLucky },
+  { name: 'Fifty Chance x5', price: 3, quantity: 0.35, image: fiftyLucky },
+  { name: 'Fifty Chance x10', price: 3, quantity: 0.5, image: fiftyLucky },
 ];
 
 
@@ -84,7 +84,7 @@ function ShopPage() {
         </Grid>
         {FiftyChanceJoker.map((product, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <ShopCard product={product} />
+            <ShopCard product={product} health={user?.user.user_metadata.health} timingJoker={user?.user.user_metadata.timingJoker} fiftyLucky={user?.user.user_metadata.fiftyPercentJoker} />
           </Grid>
         ))}
       </Grid>
