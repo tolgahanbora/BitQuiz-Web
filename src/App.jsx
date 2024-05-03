@@ -12,7 +12,7 @@ function App() {
   const token = sessionStorage.getItem('access_token');
 
   return (
-    <Router>
+   
       <main>
         <Routes>
           {token ? (
@@ -25,7 +25,7 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/" element={<Navigate to="/auth" />} />
+              <Route path="/"   element={<Navigate to="/auth" />} />
               <Route path="/play" element={<Navigate to="/auth" />} />
               <Route path="/shop" element={<Navigate to="/auth" />} />
               <Route path="/profile" element={<Navigate to="/auth" />} />
@@ -35,7 +35,7 @@ function App() {
           )}
         </Routes>
       </main>
-    </Router>
+   
   );
 }
 
