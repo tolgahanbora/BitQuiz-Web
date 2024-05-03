@@ -12,7 +12,7 @@ function App() {
   const token = sessionStorage.getItem('access_token');
 
   return (
-    <Router  basename="/auth" >
+    <Router  basename="/" >
       <main>
         <Routes>
           {token ? (
