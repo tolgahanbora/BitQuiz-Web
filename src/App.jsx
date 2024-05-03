@@ -8,6 +8,10 @@ import './App.css';
 import React from 'react';
 import QuizPage from './pages/quizPage';
 
+function NotFound() {
+  return <h1>404 Sayfa Bulunamadı</h1>;
+}
+
 function App() {
   const token = sessionStorage.getItem('access_token');
 
@@ -31,6 +35,7 @@ function App() {
               <Route path="/profile" element={<Navigate to="/auth" />} />
               <Route path="/quiz" element={<Navigate to="/auth" />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/test" element={<NotFound />} />
             </>
           )}
         </Routes>
