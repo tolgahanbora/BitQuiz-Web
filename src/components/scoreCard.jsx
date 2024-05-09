@@ -11,16 +11,36 @@ const Score = ({token, trueAnswers,totalToken}) => {
     const trueAnswer = trueAnswers || 0
     const totalEarnedBTC = token || 0;
     const navigate = useNavigate()
-
+    const confettiRef = useRef(null)
     const { user } = useUserContext();
+    const [isConfettiActive, setIsConfettiActive] = useState(false);
 
+    const fetchUserData = async () => {
+        try {
+
+            const response = await fetch(`http://localhost:3000/reset-timer`);
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
  
-
-  
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsConfettiActive(true);
+        }, 800);
+    
+        return () => {
+            clearTimeout(timer);
+            setIsConfettiActive(false); // Set isConfettiActive to false when component unmounts
+        };
+    }, []);
 
     const updateToken = async () => {
         try {
-            const newToken = await totalToken + totalEarnedBTC;
+            // profile table da ki değeri azaltmıyor
+            const newToken = await (totalToken + (totalEarnedBTC));
             console.log(newToken)
             console.log(totalToken)
             console.log(totalEarnedBTC)
@@ -35,13 +55,14 @@ const Score = ({token, trueAnswers,totalToken}) => {
     useEffect(() => {
         if(user) {
             updateToken();
+            fetchUserData()
         }
        
     }, []);
 
     const config = {
         angle: 90,
-        spread: 45,
+        spread: 360,
         startVelocity: 45,
         elementCount: 50,
         dragFriction: 0.1,
@@ -49,7 +70,8 @@ const Score = ({token, trueAnswers,totalToken}) => {
         stagger: 0,
         width: "10px",
         height: "10px",
-        colors: ["#32167C", "#6949FD"],
+        perspective: "500px",
+        colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
         random: Math.random
     };
 
@@ -122,7 +144,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
                     }}>{totalEarnedBTC.toFixed(6)}</Typography>
                 </Stack>
             </Paper>
-            <Confetti active={true} config={config} />
+            <Confetti   ref={confettiRef} active={isConfettiActive} config={config} />
             <Stack direction="row" spacing={2} sx={{  width: "100%", marginBottom: 3}}>
                 <Button
                     fullWidth

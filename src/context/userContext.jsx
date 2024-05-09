@@ -37,17 +37,24 @@ export const UserContextProvider = ({ children }) => {
         return;
       }
       
-let { data: profiles } = await supabase
-.from('profiles')
-.select('data')
-.eq("id",data.user.id)
-console.log("detc", profiles[0].data)
+      let { data: profiles } = await supabase
+        .from('profiles')
+        .select('data')
+        .eq("id", data.user.id);
+      
       setUser(profiles[0].data);
+
+      // localStorage kontrolü
+      const storedUserId = localStorage.getItem('userId');
+      if (storedUserId !== data.user.id.toString()) {
+        localStorage.setItem('userId', data.user.id.toString());
+      }
     };
 
     fetchUser();
     broadcastUser()
-  }, []);
+}, []);
+
 
 
 

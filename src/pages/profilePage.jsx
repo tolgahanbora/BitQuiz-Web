@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import  { useState, useCallback } from 'react';
+import  { useState, useCallback,useRef } from 'react';
 import { Box, Typography, Modal, TextField, Button, Link, Paper, Container, Stack } from '@mui/material';
 import Navbar from "../components/nav"
+import Confetti from 'react-dom-confetti';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 // import { useUser } from '../context/UserContext';
@@ -33,8 +34,8 @@ const ProfilePage = () => {
   const [solanaAddress, setSolanaAddress] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {user, user2} = useUserContext();
-
-
+  const confettiRef = useRef(null)
+  const [isConfettiActive, setIsConfettiActive] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -64,11 +65,27 @@ const ProfilePage = () => {
        }
      };
 
+     const config = {
+      angle: 90,
+      spread: 360,
+      startVelocity: 45,
+      elementCount: 50,
+      dragFriction: 0.1,
+      duration: 3000,
+      stagger: 0,
+      width: "10px",
+      height: "10px",
+      perspective: "500px",
+      colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
+      random: Math.random
+  };
+
 
      const handleBuy = useCallback(async () => {
        try {
            if (!user?.token < 1) {
                console.error('Cüzdan bağlı değil');
+               setIsConfettiActive(true)
                return;
            }
    
@@ -131,7 +148,7 @@ const ProfilePage = () => {
   
   }}
 >
-
+<Confetti   ref={confettiRef} active={isConfettiActive} config={config} />
       <Typography variant="h3" color="white" gutterBottom>
         Profile
       </Typography>

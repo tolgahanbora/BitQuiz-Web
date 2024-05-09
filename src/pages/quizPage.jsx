@@ -46,6 +46,25 @@ function QuizPage() {
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState()
 
   const currentQuestions = shuffledQuestions[currentQuestionIndex];
+
+  const fetchUserData = async () => {
+    try {
+        // localStorage'dan userId değerini al
+        const userId = localStorage.getItem('userId');
+
+        // userId değeri varsa isteği yap
+        if (userId) {
+            const response = await fetch(`http://localhost:3000/start-timer/${userId}/${user.token}`);
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.error('userId not found in localStorage');
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
+
  
 
   const fetchQuestions = async () => {
@@ -83,6 +102,7 @@ const generateRandomNumber = () => {
     const randomNumber = Math.random() * (0.0009 - 0.00009) + 0.00009;
     return randomNumber.toFixed(7);
 };
+
 
 
 const handleAnswer = (selectedOptionIndex) => {
@@ -124,6 +144,7 @@ useEffect(() => {
     // Shuffle the questions when the component mounts
     
     fetchQuestions();
+    fetchUserData();
 }, []);
 
 useEffect(() => {
@@ -132,6 +153,9 @@ useEffect(() => {
         setCorrectAnswerIndex(currentQuestions.secenekler.indexOf(currentQuestions.dogru_cevap));
     }
 }, [currentQuestions]);
+
+
+
 
 
 useEffect(() => {
@@ -160,6 +184,8 @@ useEffect(() => {
     // Clean up the interval when the component unmounts or when the question changes
     return () => clearInterval(interval);
 }, [currentQuestionIndex]);
+
+
 
  // Function to handle the button press and extend the timer
  const handleExtendTimer = () => {
@@ -257,16 +283,12 @@ const handleNextQuestion = () => {
     // Move to the next question
     const randomBTC = generateRandomNumber();
     // Yanlış cevap!
-    toast({
-        type: 'error',
-        position: 'top',
-        text1: 'Wrong Answer!',
-        text2: `${randomBTC} Sol Deleted👋`,
-        visibilityTime: 2000,
+    toast.error(`${randomBTC} SOL Deleted 😢`, {
+      position: "top-center"
     });
-    setWrongAnswer(true + 1)
-    // Toplam kazanılan BTC'yi güncelle
-    setTotalEarnedBTC((prev) => prev - parseFloat(randomBTC));
+  setWrongAnswer(true + 1)
+  setTotalEarnedBTC((prev) => prev - parseFloat(randomBTC));
+  
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setQuestionCount(questionCount + 1);
 };
