@@ -18,7 +18,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
     const fetchUserData = async () => {
         try {
 
-            const response = await fetch(`http://localhost:3000/reset-timer`);
+            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/reset-timer`);
             const data = await response.json();
             console.log(data);
         } catch (error) {

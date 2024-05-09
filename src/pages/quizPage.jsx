@@ -54,7 +54,7 @@ function QuizPage() {
 
         // userId değeri varsa isteği yap
         if (userId) {
-            const response = await fetch(`http://localhost:3000/start-timer/${userId}/${user.token}`);
+            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${user.token}`);
             const data = await response.json();
             console.log(data);
         } else {
