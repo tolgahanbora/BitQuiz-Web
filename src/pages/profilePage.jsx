@@ -84,13 +84,11 @@ const ProfilePage = () => {
      const handleBuy = useCallback(async () => {
        try {
            if (!user?.token < 1) {
-               console.error('Cüzdan bağlı değil');
-               setIsConfettiActive(true)
+               alert('You have not enough to withdraw from the account. More than 1 solana');
                return;
            }
    
-           
-           console.log("ajsdhsad", user2)
+          
            // Ödeme miktarını lamport cinsinden hesapla
            const lamports =  user?.token * LAMPORTS_PER_SOL;
    
@@ -119,6 +117,7 @@ const ProfilePage = () => {
             const { data, error } = await supabase.auth.updateUser({
               data: { token: 0 }
             })
+            setIsConfettiActive(true)
            }
        } catch (error) {
            console.error("Hata: ", error);

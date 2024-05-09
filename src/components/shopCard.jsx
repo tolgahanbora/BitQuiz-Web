@@ -8,6 +8,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 import {
   
     WalletDisconnectButton,
@@ -55,13 +57,15 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
 
           if (error) {
             console.error('Error updating user metadata:', error);
+            alert("You can't buy tickets. Check your wallet.")
           } else {
             // Update state to reflect the new value
-
-            console.log('User metadata updated successfully');
+            
+            alert("Game Ticket added your profile 🤙")
           }
         } catch (error) {
           console.error('Error updating user metadata:', error);
+          alert("Something went wrong buying tickets.")
         }
       }
 
@@ -73,13 +77,15 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
 
           if (error) {
             console.error('Error updating user metadata:', error);
+            alert("You can't buy tickets. Check your wallet.")
           } else {
             // Update state to reflect the new value
-
+            alert("Game Ticket added your profile 🤙")
             console.log('User metadata updated successfully');
           }
         } catch (error) {
           console.error('Error updating user metadata:', error);
+          alert("Something went wrong buying tickets.")
         }
       }
 
@@ -90,14 +96,16 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
           })
 
           if (error) {
+            alert("You can't buy tickets. Check your wallet.")
             console.error('Error updating user metadata:', error);
           } else {
             // Update state to reflect the new value
-
+            alert("Game Ticket added your profile 🤙")
             console.log('User metadata updated successfully');
           }
         } catch (error) {
           console.error('Error updating user metadata:', error);
+          alert("Something went wrong buying tickets.")
         }
       }
 
@@ -398,7 +406,11 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
    
 
     return (
+        <>
+        
+       
         <Card sx={{ maxWidth: 345, backgroundColor: "#311C7F", borderRadius: 5 }}>
+          
           <WalletModal open={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
             <CardMedia
                 sx={{ height: 170 }}
@@ -456,6 +468,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
                     <WalletDisconnectButton /></Stack>
             </CardActions>
         </Card>
+        </>
     );
 }
 
