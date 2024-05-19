@@ -33,8 +33,7 @@ function PlayPage() {
 
   const playGame = async () => {
     if (userTickets > 0) {
-      const newTicketValue = userTickets - 1;
-      await updateTicket(newTicketValue);
+  
       navigate("/quiz")
     } else {
       alert(

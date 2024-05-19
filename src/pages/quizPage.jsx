@@ -16,7 +16,10 @@ function QuizPage() {
 
   const {user}  = useUserContext()
   const history = useNavigate();
-  
+ 
+  let ticket = user?.health
+
+ 
 
 
   const [showScore, setShowScore] = React.useState(false);
@@ -39,6 +42,7 @@ function QuizPage() {
 
   const [extendedTimer, setExtendedTimer] = useState(0);
   const [timingJoker, setTimingJoker] = useState(user?.timingJoker)
+ 
 
 
   const [jokerCount, setJokerCount] = useState(user?.fiftyPercentJoker); // Assuming the user starts with 3 jokers
@@ -46,17 +50,34 @@ function QuizPage() {
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState()
 
   const currentQuestions = shuffledQuestions[currentQuestionIndex];
+  
+
+  const updateTicket = async (newTicketValue) => {
+    try {
+      if (newTicketValue >= 0)
+      await supabase.auth.updateUser({
+        data: { health: newTicketValue },
+      });
+      else if ( newTicketValue < 0) {
+        history('/play'); 
+      }
+
+    } catch (error) {
+      console.error('Error updating ticket:', error);
+    }
+  };
 
   const fetchUserData = async () => {
     try {
         // localStorage'dan userId değerini al
         const userId = localStorage.getItem('userId');
-
+      console.log("rokens", user?.token)
         // userId değeri varsa isteği yap
         if (userId) {
-            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${user.token}`);
+            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${user?.token}`);
             const data = await response.json();
             console.log(data);
+
         } else {
             console.error('userId not found in localStorage');
         }
@@ -65,7 +86,6 @@ function QuizPage() {
     }
 };
 
- 
 
   const fetchQuestions = async () => {
     try {
@@ -88,6 +108,20 @@ function QuizPage() {
             const shuffledArray = formattedQuestions.sort(() => Math.random() - 0.5);
             setShuffledQuestions(shuffledArray);
             setCurrentQuestionIndex(0); // Set initial question index
+            console.log("önemli olan",shuffledArray.length, currentQuestionIndex)
+            if (currentQuestionIndex === 0 || currentQuestionIndex < 1) {
+              // Call the updateTicket function with the new ticket value
+              const newTicketValue = ticket - 1;
+              console.log("newTicketValue",newTicketValue,ticket)
+              if (newTicketValue >= 0) {
+               await updateTicket(newTicketValue);
+                console.log("Ticket updated")
+              }
+             // Decrease health by 0.5 for the first question
+               else if( newTicketValue < 0) {
+                history("/play")
+               }
+              }
         } else {
             console.error('Failed to fetch questions');
         }
@@ -96,6 +130,15 @@ function QuizPage() {
     }
 };
 
+
+
+useEffect(() => {
+  if( ticket !== undefined) {
+    fetchQuestions();
+  
+  }
+  fetchUserData();
+}, [])
 
 //Generate Num
 const generateRandomNumber = () => {
@@ -140,12 +183,7 @@ const handleAnswer = (selectedOptionIndex) => {
     setQuestionCount(questionCount + 1);
 };
 
-useEffect(() => {
-    // Shuffle the questions when the component mounts
-    
-    fetchQuestions();
-    fetchUserData();
-}, []);
+
 
 useEffect(() => {
     // Update the correct answer index whenever a new question is displayed
@@ -294,15 +332,13 @@ const handleNextQuestion = () => {
 };
 
 
-if (user?.health < 1) {
-  history('/play'); // Redirect to '/play' page using useHistory hook
-}
+
 
   return (
     <>
     <Navbar />
    
-    <Container sx={{backgroundColor: "transparent"}}>
+    <Container sx={{marginTop: '2rem', backgroundColor: "transparent"}}>
       {showScore ? (
         <Paper elevation={3} style={{ padding: 20, textAlign: 'center', width: "150%", height: "170%", backgroundColor: "#1F1147" }}>
      
@@ -350,7 +386,7 @@ if (user?.health < 1) {
            {/* Joker buttons */}
            <Stack direction={"row"} style={{ marginTop: 20, justifyContent: 'center' }}>
               <Button
-                onClick={handleExtendTimer}
+                 onClick={() => handleExtendTimer()}
                 disabled={jokerUsed}
                 style={{
                   backgroundColor: "#6949FD",
@@ -362,7 +398,7 @@ if (user?.health < 1) {
                Time Joker-{timingJoker}
               </Button>
               <Button
-                onClick={handleJoker}
+              onClick={() => handleJoker()}
                 disabled={jokerUsed}
                 style={{
                   backgroundColor: "#6949FD",

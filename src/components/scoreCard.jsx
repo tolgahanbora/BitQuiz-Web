@@ -58,7 +58,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
             fetchUserData()
         }
        
-    }, []);
+    }, [trueAnswer]);
 
     const config = {
         angle: 90,
@@ -84,13 +84,14 @@ const Score = ({token, trueAnswers,totalToken}) => {
     };
 
     return (
-        <Container style={{
+        <Container  style={{
             backgroundColor: "#1F1147",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-           
+            minWidth: { xs: "100%", sm: "80%", md: "65%" },
+           maxWidth: { xs: "20%", sm: "20%", md: "65%" },
         }}>
             <Stack
                 direction="column"
@@ -121,6 +122,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
                     alignItems: "center",
                     justifyContent: "center"
                 }}
+                xs={12} sm={6} md={3}
             >
                 <Typography sx={{
                     color: "#FEFEFE",
@@ -145,7 +147,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
                 </Stack>
             </Paper>
             <Confetti   ref={confettiRef} active={isConfettiActive} config={config} />
-            <Stack direction="row" spacing={2} sx={{  width: "100%", marginBottom: 3}}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{  width: "100%", marginBottom: 3}}>
                 <Button
                     fullWidth
                     sx={{

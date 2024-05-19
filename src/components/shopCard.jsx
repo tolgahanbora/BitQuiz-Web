@@ -72,7 +72,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
       const addTimingJoker = async (newTimingJoker) => {
         try {
           const { data, error } = await supabase.auth.updateUser({
-            data: { health: newTimingJoker}
+            data: { timingJoker: newTimingJoker}
           })
 
           if (error) {
@@ -80,7 +80,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
             alert("You can't buy tickets. Check your wallet.")
           } else {
             // Update state to reflect the new value
-            alert("Game Ticket added your profile 🤙")
+            alert("Timing Joker added your profile 🤙")
             console.log('User metadata updated successfully');
           }
         } catch (error) {
@@ -92,7 +92,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
       const addFiftyChance = async (newFiftyChance) => {
         try {
           const { data, error } = await supabase.auth.updateUser({
-            data: { health: newFiftyChance }
+            data: { fiftyPercentJoker: newFiftyChance }
           })
 
           if (error) {

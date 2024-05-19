@@ -126,9 +126,7 @@ const ProfilePage = () => {
    }, [wallet, publicKey, sendTransaction, signTransaction, connection]);
 
 
-  const openPhantomHelp = () => {
-    // Open help link
-  };
+
 
   return (
    <>

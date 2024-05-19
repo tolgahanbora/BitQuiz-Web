@@ -42,22 +42,22 @@ function ShopPage() {
     <Box mt={20}>
       <Typography variant="h2" style={{ marginBottom: '20px', color: "white", marginTop: 13 }}>Shop</Typography>
       <Box display="flex" justifyContent="space-between" width="100%" mt={2} mb={2}>
-  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+  <Box sx={{ display: 'flex', alignItems: 'center', }} >
     <TicketIcon style={{color: "white"}} />
-    <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
+    <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px', mr: {xs: 2 } }}>
       Game Ticket: {user?.health}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <AccessTimeIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Time Joker: {user2?.timingJoker}
+      Time Joker: {user?.timingJoker}
     </Typography>
   </Box>
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <PercentIcon style={{color: "white"}} />
     <Typography sx={{ color: "#FEFEFE", fontWeight: "bold", fontSize: 15, marginLeft: '8px' }}>
-      Fifty Lucky: {user2?.fiftyPercentJoker}
+      Fifty Lucky: {user?.fiftyPercentJoker}
     </Typography>
   </Box>
 </Box>
