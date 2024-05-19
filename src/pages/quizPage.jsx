@@ -18,8 +18,8 @@ function QuizPage() {
   const history = useNavigate();
  
   let ticket = user?.health
-
- 
+  let token = user?.token
+  const userId =  localStorage.getItem('userId');
 
 
   const [showScore, setShowScore] = React.useState(false);
@@ -70,13 +70,13 @@ function QuizPage() {
   const fetchUserData = async () => {
     try {
         // localStorage'dan userId değerini al
-        const userId = localStorage.getItem('userId');
-      console.log("rokens", user?.token)
+        
+      console.log("rokens", user?.token, userId, token)
         // userId değeri varsa isteği yap
         if (userId) {
-            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${user?.token}`);
+            const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${token}`);
             const data = await response.json();
-            console.log(data);
+            console.log("fetch isteği",data);
 
         } else {
             console.error('userId not found in localStorage');
