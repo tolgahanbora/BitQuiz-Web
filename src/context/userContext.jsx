@@ -19,7 +19,7 @@ export const UserContextProvider = ({ children }) => {
           'postgres_changes',
           { event: '*', schema: 'public', table: 'profiles' },
           (payload) => {
-            console.log('Payload received:', payload);
+          
             setUser(payload.new.data);
           }
         )

@@ -20,7 +20,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
 
             const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/reset-timer`);
             const data = await response.json();
-            console.log(data);
+        
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -41,9 +41,7 @@ const Score = ({token, trueAnswers,totalToken}) => {
         try {
             // profile table da ki değeri azaltmıyor
             const newToken = await (totalToken + (totalEarnedBTC));
-            console.log(newToken)
-            console.log(totalToken)
-            console.log(totalEarnedBTC)
+          
             await supabase.auth.updateUser({
                 data: { token: newToken },
             });

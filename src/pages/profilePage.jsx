@@ -112,7 +112,7 @@ const ProfilePage = () => {
            // İşlemi gönder
         
          const result =  await connection.confirmTransaction(signature);
-           console.log('Transaction successful:', result);
+        
            if(result) {
             const { data, error } = await supabase.auth.updateUser({
               data: { token: 0 }

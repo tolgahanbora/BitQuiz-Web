@@ -259,7 +259,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
                 return;
             }
     
-            console.log()
+    
     
             // Ödeme miktarını lamport cinsinden hesapla
             const lamports = itemPrice * LAMPORTS_PER_SOL;
@@ -284,7 +284,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
             // İşlemi gönder
          
           const result =  await connection.confirmTransaction(signature);
-            console.log('Transaction successful:', result);
+          
               // Satın alma işlemi başarılıysa ilgili ürünü kullanıcıya ekle
         switch (name) {
           case 'Game Ticket':
@@ -329,7 +329,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
       }
         } catch (error) {
             console.error("Hata: ", error);
-            console.log("errordur bu", error)
+           
             setIsWalletModalOpen(true)
         }
     }, [wallet, price, publicKey, sendTransaction, signTransaction, connection]);
@@ -345,7 +345,7 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
           }
   
           const newToken = await token  - itemPrice;
-          console.log(newToken)
+    
       
           await supabase.auth.updateUser({
               data: { token: newToken },
@@ -393,8 +393,8 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
             break;
     }
       } catch (error) {
-          console.error("Hata: ", error);
-          console.log("errordur bu", error)
+          console.error("error: ", error);
+          console.log("error", error)
           setIsWalletModalOpen(true)
       }
   }, [ price]);

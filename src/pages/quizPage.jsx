@@ -71,12 +71,12 @@ function QuizPage() {
     try {
         // localStorage'dan userId değerini al
         
-      console.log("rokens", user?.token, userId, token)
+ 
         // userId değeri varsa isteği yap
         if (userId) {
             const response = await fetch(`${import.meta.env.VITE_FRAUD_API}/start-timer/${userId}/${token}`);
             const data = await response.json();
-            console.log("fetch isteği",data);
+           
 
         } else {
             console.error('userId not found in localStorage');
@@ -108,14 +108,14 @@ function QuizPage() {
             const shuffledArray = formattedQuestions.sort(() => Math.random() - 0.5);
             setShuffledQuestions(shuffledArray);
             setCurrentQuestionIndex(0); // Set initial question index
-            console.log("önemli olan",shuffledArray.length, currentQuestionIndex)
+        
             if (currentQuestionIndex === 0 || currentQuestionIndex < 1) {
               // Call the updateTicket function with the new ticket value
               const newTicketValue = ticket - 1;
-              console.log("newTicketValue",newTicketValue,ticket)
+           
               if (newTicketValue >= 0) {
                await updateTicket(newTicketValue);
-                console.log("Ticket updated")
+           
               }
              // Decrease health by 0.5 for the first question
                else if( newTicketValue < 0) {

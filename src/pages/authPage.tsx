@@ -33,7 +33,7 @@ function AuthPage() {
       if (error) {
         throw error;
       }
-      console.log(data);
+  
       setIsRegistering(false)
     } catch (error) {
       console.error(error.message);
@@ -49,7 +49,7 @@ function AuthPage() {
       if (error) {
         throw error;
       }
-      console.log(data);
+  
       // Başarılı giriş sonrası profil sayfasına yönlendirme
       sessionStorage.setItem('access_token', data.session.access_token);
       navigate('/profile');
