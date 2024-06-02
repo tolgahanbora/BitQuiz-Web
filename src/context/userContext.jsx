@@ -32,6 +32,7 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser();
+      console.log("buansd", data)
       if (error) {
         console.error('Error fetching user:', error.message);
         return;

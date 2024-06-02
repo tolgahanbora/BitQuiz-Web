@@ -12,16 +12,19 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@picketapi/picket-react": "^0.0.75",
+    "@solana/spl-token": "^0.1.8",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-wallets": "^0.19.32",
-    "@solana/web3.js": "^1.91.7",
+    "@solana/web3.js": "^1.91.8",
     "@supabase/supabase-js": "^2.42.5",
     "axios": "^1.6.8",
+    "buffer": "^6.0.3",
     "he": "^1.2.0",
     "i": "^0.3.7",
     "npm": "^10.5.2",
@@ -33,7 +36,7 @@
   },
   "overrides": {
     "@ledgerhq/errors": "6.16.3"
-    },
+  },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

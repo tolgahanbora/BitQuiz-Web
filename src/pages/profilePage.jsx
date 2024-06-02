@@ -22,7 +22,7 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 
 import supabase from '../utils/supabase';
-import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 import { Transaction, SystemProgram, PublicKey,LAMPORTS_PER_SOL, Keypair, Connection  } from '@solana/web3.js';
