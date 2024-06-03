@@ -93,7 +93,7 @@ function PlayPage() {
     }
   
     // Calculate ticket count based on Bonk balance
-    ticketCount = Math.floor(bonkBalance / 100000) * 5;
+    ticketCount = Math.floor(bonkBalance / 500000) * 5;
   
     // Update user's ticket count and getTicketDate in Supabase
     const { error } = await supabase.auth.updateUser({
@@ -188,8 +188,9 @@ function PlayPage() {
           <div style={{ marginTop: '20px' }}>
             <Typography variant="body1" sx={{ color: 'white' }}>{`Wallet Address: ${walletAddress}`}</Typography>
             <Typography variant="body1" sx={{ color: 'white' }}>{`BONK Balance: ${bonkBalance !== null ? bonkBalance : 'Fetching...'}`}</Typography>
-            {bonkBalance && bonkBalance >= 100000 && (
-        <Button onClick={getTicket} style={{ marginTop: '20px', color: 'white' }}>
+            {bonkBalance && bonkBalance >= 500000 && (
+        <Button onClick={getTicket}    variant="outlined"
+        style={{ marginTop: '20px', color: 'white', borderColor: 'white' }}>
           Get Ticket
         </Button>
       )}
