@@ -425,48 +425,42 @@ function ShopCard({ product,health, timingJoker, fiftyLucky, token }) {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Stack direction={"column"} gap={1}>
-                    <Stack direction={"row"} gap={1}>
-                      <Button
-                        onClick={onHandleBuySolana}
-                        size="large"
-                        fullWidth
-                        sx={{
-                        
-                            marginLeft: 'auto',
-                            marginRight: '20px',
-                            backgroundColor: "#6949FD",
-                            color: "#FEFEFE",
-                            fontWeight: "bold",
-                            '&:hover': {
-                                backgroundColor: '#7E64FF',
-                            },
-                        }}
-                    >
-                    Buy {price}$SOL
-                    </Button>
-                    <Button
-                        onClick={onHandleBuySolanaGame}
-                        size="large"
-                        fullWidth
-                        sx={{
-                        
-                            marginLeft: 'auto',
-                            marginRight: '20px',
-                            backgroundColor: "#6949FD",
-                            color: "#FEFEFE",
-                            fontWeight: "bold",
-                            '&:hover': {
-                                backgroundColor: '#7E64FF',
-                            },
-                        }}
-                    >
-                    Buy {price}$SOL
-                    </Button>
-                    </Stack>
-                   <WalletMultiButton />
-                    <WalletDisconnectButton /></Stack>
-            </CardActions>
+          <Stack direction={"column"} gap={1}>
+            <Stack direction={"row"} gap={1} sx={{ width: '100%' }}>
+              <Button
+                onClick={onHandleBuySolana}
+                size="medium"
+                sx={{
+                  width: '50%',
+                  backgroundColor: "#6949FD",
+                  color: "#FEFEFE",
+                  fontWeight: "bold",
+                  '&:hover': {
+                    backgroundColor: '#7E64FF',
+                  },
+                }}
+              >
+                Buy {price}$SOL
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={onHandleBuySolanaGame}
+                size="medium"
+                sx={{
+                  width: '50%',
+                  borderColor: "#6949FD",
+                  borderWidth: 2,
+                  color: "#FEFEFE",
+                  fontWeight: "bold",
+                }}
+              >
+                Buy in Game {price} SOL
+              </Button>
+            </Stack>
+            <WalletMultiButton />
+            <WalletDisconnectButton />
+          </Stack>
+        </CardActions>
         </Card>
         </>
     );
