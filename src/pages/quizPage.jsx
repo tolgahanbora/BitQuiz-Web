@@ -37,7 +37,7 @@ function QuizPage() {
   const [wrongAnswer, setWrongAnswer] = useState(0)
 
   // zaman state
-  const [timer, setTimer] = useState(10); // Timer value in seconds
+  const [timer, setTimer] = useState(20); // Timer value in seconds
 
 
   const [extendedTimer, setExtendedTimer] = useState(0);
@@ -210,7 +210,7 @@ useEffect(() => {
                         setCurrentQuestionIndex(currentQuestionIndex + 1);
                         setQuestionCount(questionCount + 1);
                         handleNextQuestion();
-                        return 10; // Reset the timer to 10 seconds for the next question
+                        return 20; // Reset the timer to 10 seconds for the next question
                     }
                 } else {
                     return prev - 1;
@@ -227,94 +227,90 @@ useEffect(() => {
 
  // Function to handle the button press and extend the timer
  const handleExtendTimer = () => {
+  if (timingJoker > 0) { // Joker sayısı sıfırdan büyükse joker kullanılsın
+    setTimer((prev) => prev + 10);
+    setExtendedTimer((prev) => prev + 1);
 
-      setTimer((prev) => prev + 10);
-      setExtendedTimer((prev) => prev + 1);
+    const newTimingJoker = timingJoker - 1;
+    const addTicket = async () => {
+      try {
+        const { data, error } = await supabase.auth.updateUser({
+          data: { timingJoker: newTimingJoker }
+        });
 
-      const newTimingJoker = timingJoker - 1
-      const addTicket = async () => {
-          try {
-            const { data, error } = await supabase.auth.updateUser({
-              data: { timingJoker: newTimingJoker }
-            })
-
-            if (error) {
-              console.error('Error updating user metadata:', error);
-            } else {
-              // Update state to reflect the new value
-
-              console.log('User metadata updated successfully');
-            }
-          } catch (error) {
-            console.error('Error updating user metadata:', error);
-          }
+        if (error) {
+          console.error('Error updating user metadata:', error);
+        } else {
+          console.log('User metadata updated successfully');
         }
+      } catch (error) {
+        console.error('Error updating user metadata:', error);
+      }
+    };
 
-
-      setTimingJoker(timingJoker - 1)
-      addTicket()
-
-
+    setTimingJoker(newTimingJoker);
+    addTicket();
+  } else {
+    toast.error("You don't have any Time Jokers left.", {
+      position: "top-center"
+    });
+  }
 };
 
 const handleJoker = () => {
-
-
-      const otherOptions = currentQuestions.secenekler.filter((_, index) => index !== correctAnswerIndex);
-      const randomIndices = [];
-      while (randomIndices.length < 2) {
-          const randomIndex = Math.floor(Math.random() * otherOptions.length);
-          if (!randomIndices.includes(randomIndex)) {
-              randomIndices.push(randomIndex);
-          }
+  if (jokerCount > 0) { // Joker sayısı sıfırdan büyükse joker kullanılsın
+    const otherOptions = currentQuestions.secenekler.filter((_, index) => index !== correctAnswerIndex);
+    const randomIndices = [];
+    while (randomIndices.length < 2) {
+      const randomIndex = Math.floor(Math.random() * otherOptions.length);
+      if (!randomIndices.includes(randomIndex)) {
+        randomIndices.push(randomIndex);
       }
+    }
 
-      // Seçilen 2 şıkkı silerek yeni şıkları oluştur
-      const updatedOptions = currentQuestions.secenekler.filter((_, index) => !randomIndices.includes(index));
+    const updatedOptions = currentQuestions.secenekler.filter((_, index) => !randomIndices.includes(index));
 
-      // Güncellenmiş şıkları ve doğru cevabı ekleyerek yeni soru objesini oluştur
-      const updatedQuestion = {
-          ...currentQuestions,
-          secenekler: updatedOptions,
-      };
+    const updatedQuestion = {
+      ...currentQuestions,
+      secenekler: updatedOptions,
+    };
 
-      // Güncellenmiş soruyu state array'indeki ilgili index'e at
-      const updatedShuffledQuestions = [...shuffledQuestions];
-      updatedShuffledQuestions[currentQuestionIndex] = updatedQuestion;
-      setShuffledQuestions(updatedShuffledQuestions);
+    const updatedShuffledQuestions = [...shuffledQuestions];
+    updatedShuffledQuestions[currentQuestionIndex] = updatedQuestion;
+    setShuffledQuestions(updatedShuffledQuestions);
 
-      const newFiftyPercent = jokerCount -1
-      const addTicket = async () => {
-          try {
-            const { data, error } = await supabase.auth.updateUser({
-              data: { fiftyPercentJoker: newFiftyPercent }
-            })
+    const newFiftyPercent = jokerCount - 1;
+    const addTicket = async () => {
+      try {
+        const { data, error } = await supabase.auth.updateUser({
+          data: { fiftyPercentJoker: newFiftyPercent }
+        });
 
-            if (error) {
-              console.error('Error updating user metadata:', error);
-            } else {
-              // Update state to reflect the new value
-
-              console.log('User metadata updated successfully');
-            }
-          } catch (error) {
-            console.error('Error updating user metadata:', error);
-          }
+        if (error) {
+          console.error('Error updating user metadata:', error);
+        } else {
+          console.log('User metadata updated successfully');
+        }
+      } catch (error) {
+        console.error('Error updating user metadata:', error);
       }
+    };
 
-      // Joker kullanımını bir azalt
-      setJokerUsed(true);
-      setJokerCount(jokerCount - 1);
-      addTicket()
-
- 
+    setJokerUsed(true);
+    setJokerCount(newFiftyPercent);
+    addTicket();
+  } else {
+    toast.error("You don't have any Fifty Percent Jokers left.", {
+      position: "top-center"
+    });
+  }
 };
 
 
 useEffect(() => {
     // Reset the timer and mark the current timer as expired when a new question is displayed
     setJokerUsed(false)
-    setTimer(10)
+    setTimer(20)
 }, [currentQuestionIndex]);
 
 const handleNextQuestion = () => {
