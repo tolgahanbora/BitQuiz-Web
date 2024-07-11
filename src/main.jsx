@@ -6,22 +6,18 @@ import { UserContextProvider } from './context/userContext'
 import {
     ConnectionProvider,
     WalletProvider,
-  } from "@solana/wallet-adapter-react";
-  import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-  import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
-  import {
+} from "@solana/wallet-adapter-react";
+import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {
     WalletModalProvider,
     WalletDisconnectButton,
     WalletMultiButton,
-  } from "@solana/wallet-adapter-react-ui";
-  import { clusterApiUrl } from "@solana/web3.js";
+} from "@solana/wallet-adapter-react-ui";
 import './index.css'
 import "@solana/wallet-adapter-react-ui/styles.css"
 
-const network = WalletAdapterNetwork.Mainnet;
-
-// You can also provide a custom RPC endpoint.
-const endpoint = clusterApiUrl(network);
+// Özel RPC endpoint'inizi burada tanımlayın
+const endpoint = "https://frosty-dimensional-surf.solana-mainnet.quiknode.pro/e339f3748c13eda169987da83f64b09503686a71/";
 
 const wallets = [
     new UnsafeBurnerWalletAdapter(),
