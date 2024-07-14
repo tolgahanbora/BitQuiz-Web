@@ -17,6 +17,8 @@ import './index.css'
 import "@solana/wallet-adapter-react-ui/styles.css"
 
 // Özel RPC endpoint'inizi burada tanımlayın
+// https://blue-cosmopolitan-uranium.solana-devnet.quiknode.pro/03121a104b27648c3e26358cc1160eb82915671d/ dev net
+
 const endpoint = "https://frosty-dimensional-surf.solana-mainnet.quiknode.pro/e339f3748c13eda169987da83f64b09503686a71/";
 
 const wallets = [

@@ -261,7 +261,9 @@ function ShopCard({ product, health, timingJoker, fiftyLucky, token }) {
       const { signature } = await window.solana.signAndSendTransaction(transaction);
 
       await connection.confirmTransaction(signature);
+      const result = await connection.confirmTransaction(signature, 'confirmed');
 
+      if (result.value.err === null) {
       switch (name) {
         case 'Game Ticket':
         case 'Game Ticket x3':
@@ -285,6 +287,7 @@ function ShopCard({ product, health, timingJoker, fiftyLucky, token }) {
           console.error('Unknown product:', name);
           break;
       }
+    }
     } catch (error) {
       console.error("Error: ", error);
       setIsWalletModalOpen(true);
