@@ -37,6 +37,7 @@ function AuthPage() {
       setIsRegistering(false)
     } catch (error) {
       console.error(error.message);
+      alert(error.message)
     }
   };
 
@@ -56,6 +57,7 @@ function AuthPage() {
       window.location.reload(); // Sayfayı yenile
     } catch (error) {
       console.error(error.message);
+      alert(error.message)
     }
   };
 
